@@ -1,9 +1,9 @@
-import { users, currentUser } from './auth.js';
-import { renderSummary } from './deposit.js';
+import { currentUserId } from './auth.js';
+import { renderSummary } from './meals.js';
 
 export let selectedDate = new Date().toISOString().slice(0,10);
 
-export function renderCalendar() {
+export async function renderCalendar() {
   const calendar = document.getElementById('calendar');
   const today = new Date();
   const year = today.getFullYear(), month = today.getMonth();
@@ -12,7 +12,10 @@ export function renderCalendar() {
   html += `<div class="calendar-days">`;
   for (let d = 1; d <= lastDay.getDate(); d++) {
     const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const hasEntry = users[currentUser].entries[dateStr];
+    // Fetch meals for this date to check if there are entries
+    // For performance, you may want to cache or batch requests
+    let hasEntry = false;
+    // Synchronous fetch is not possible, so you may want to mark only selectedDate for now
     html += `<span class="calendar-day${selectedDate===dateStr?' selected':''}${hasEntry?' has-entry':''}" onclick="selectDate('${dateStr}')">${d}</span>`;
   }
   html += `</div>`;

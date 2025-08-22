@@ -1,6 +1,5 @@
 from flask import Flask, request
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
 from models import db, User, Entry, Meal
 from datetime import datetime
 
@@ -19,7 +18,8 @@ def register():
     data = request.json
     if User.query.filter_by(username=data['username']).first():
         return {'success': False, 'message': 'User already exists.'}, 400
-    user = User(username=data['username'], password=data['password'])
+    is_admin = data.get('is_admin', False)
+    user = User(username=data['username'], password=data['password'], is_admin=is_admin)
     db.session.add(user)
     db.session.commit()
     return {'success': True, 'message': 'Registered successfully.'}
@@ -30,40 +30,50 @@ def login():
     user = User.query.filter_by(username=data['username'], password=data['password']).first()
     if not user:
         return {'success': False, 'message': 'Invalid credentials.'}, 401
-    return {'success': True, 'message': 'Login successful.', 'user_id': user.id}
+    return {'success': True, 'message': 'Login successful.', 'user_id': user.id, 'is_admin': user.is_admin}
 
-@app.route('/deposit', methods=['POST'])
-def deposit():
-    data = request.json
-    user = User.query.get(data['user_id'])
-    if not user:
-        return {'success': False, 'message': 'User not found.'}, 404
-    entry = Entry.query.filter_by(user_id=user.id, date=data['date']).first()
-    if not entry:
-        entry = Entry(user_id=user.id, date=data['date'])
-        db.session.add(entry)
-    entry.calories = data['calories']
-    entry.protein = data['protein']
-    entry.carbs = data['carbs']
-    entry.fat = data['fat']
-    db.session.commit()
-    return {'success': True, 'message': 'Entry saved.'}
+# Admin endpoints
+@app.route('/admin/users', methods=['GET'])
+def admin_get_users():
+    admin_id = request.args.get('admin_id')
+    admin = User.query.get(admin_id)
+    if not admin or not admin.is_admin:
+        return {'success': False, 'message': 'Unauthorized.'}, 403
+    users = User.query.all()
+    return {'success': True, 'users': [
+        {'id': u.id, 'username': u.username, 'is_admin': u.is_admin}
+        for u in users
+    ]}
 
-@app.route('/entry/<int:user_id>/<date>', methods=['GET'])
-def get_entry(user_id, date):
+@app.route('/admin/user/<int:user_id>', methods=['DELETE'])
+def admin_delete_user(user_id):
+    admin_id = request.args.get('admin_id')
+    admin = User.query.get(admin_id)
+    if not admin or not admin.is_admin:
+        return {'success': False, 'message': 'Unauthorized.'}, 403
     user = User.query.get(user_id)
     if not user:
         return {'success': False, 'message': 'User not found.'}, 404
-    entry = Entry.query.filter_by(user_id=user.id, date=date).first()
-    if not entry:
-        return {'success': True, 'entry': None}
-    return {'success': True, 'entry': {
-        'calories': entry.calories,
-        'protein': entry.protein,
-        'carbs': entry.carbs,
-        'fat': entry.fat
-    }}
+    db.session.delete(user)
+    db.session.commit()
+    return {'success': True}
 
+@app.route('/admin/user/<int:user_id>', methods=['PUT'])
+def admin_modify_user(user_id):
+    admin_id = request.args.get('admin_id')
+    admin = User.query.get(admin_id)
+    if not admin or not admin.is_admin:
+        return {'success': False, 'message': 'Unauthorized.'}, 403
+    data = request.json
+    user = User.query.get(user_id)
+    if not user:
+        return {'success': False, 'message': 'User not found.'}, 404
+    user.username = data.get('username', user.username)
+    user.password = data.get('password', user.password)
+    db.session.commit()
+    return {'success': True}
+
+# Meals endpoints (unchanged, only meal deposition)
 @app.route('/meals/<int:user_id>/<date>', methods=['GET'])
 def get_meals(user_id, date):
     entry = Entry.query.filter_by(user_id=user_id, date=date).first()
