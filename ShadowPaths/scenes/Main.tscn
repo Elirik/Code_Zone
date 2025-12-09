@@ -1,0 +1,194 @@
+[gd_scene load_steps=6 format=3 uid="uid://bvnxrjvhvwqyn"]
+
+[ext_resource type="Script" path="res://scripts/core/GameStateManager.gd" id="1_0k8vh"]
+[ext_resource type="Script" path="res://scripts/world/ExplorationController.gd" id="2_m4x2y"]
+[ext_resource type="Script" path="res://scripts/core/Player.gd" id="3_8j9kq"]
+[ext_resource type="Script" path="res://scripts/ui/UIController.gd" id="4_7p5rs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1x8vu"]
+size = Vector2(20, 30)
+
+[node name="Main" type="Node2D"]
+script = ExtResource("2_m4x2y")
+
+[node name="GameStateManager" type="Node" parent="."]
+script = ExtResource("1_0k8vh")
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="TileMap" type="TileMap" parent="World"]
+tile_set = null
+format = 2
+layer_0/tile_data = PackedInt32Array(131072, 65536, 131073, 65537, 131074, 65538, 131075, 65539, 131076, 65540, 131077, 65541, 131078, 65542, 131079, 65543, 131080, 65544, 131081, 65545, 131082, 65546, 131083, 65547, 131084, 65548, 131085, 65549, 131086, 65550, 131087, 65551, 131088, 65552, 131089, 65553, 131090, 65554, 131091, 65555, 131092, 65556, 131093, 65557, 131094, 65558, 131095, 65559, 131096, 65560, 131097, 65561, 131098, 65562, 131099, 65563, 131100, 65564, 131101, 65565, 131102, 65566, 131103, 65567, 131104, 65568, 131105, 65569, 131106, 65570, 131107, 65571, 131108, 65572, 131109, 65573, 131110, 65574, 131111, 65575, 131112, 65576, 131113, 65577, 131114, 65578, 131115, 65579, 131116, 65580, 131117, 65581, 131118, 65582, 131119, 65583, 131120, 65584, 131121, 65585, 131122, 65586, 131123, 65587, 131124, 65588, 131125, 65589, 131126, 65590, 131127, 65591, 131128, 65592, 131129, 65593, 131130, 65594, 131131, 65595, 131132, 65596, 131133, 65597, 131134, 65598, 131135, 65599, 131136, 65600, 131137, 65601, 131138, 65602, 131139, 65603, 131140, 65604, 131141, 65605, 131142, 65606, 131143, 65607, 131144, 65608, 131145, 65609, 131146, 65610, 131147, 65611, 131148, 65612, 131149, 65613, 131150, 65614, 131151, 65615, 131152, 65616, 131153, 65617, 131154, 65618, 131155, 65619, 131156, 65620, 131157, 65621, 131158, 65622, 131159, 65623, 131160, 65624, 131161, 65625, 131162, 65626, 131163, 65627, 131164, 65628, 131165, 65629, 131166, 65630, 131167, 65631, 131168, 65632, 131169, 65633, 131170, 65634, 131171, 65635, 131172, 65636, 131173, 65637, 131174, 65638, 131175, 65639, 131176, 65640, 131177, 65641, 131178, 65642, 131179, 65643, 131180, 65644, 131181, 65645, 131182, 65646, 131183, 65647, 131184, 65648, 131185, 65649, 131186, 65650, 131187, 65651, 131188, 65652, 131189, 65653, 131190, 65654, 131191, 65655, 131192, 65656, 131193, 65657, 131194, 65658, 131195, 65659, 131196, 65660, 131197, 65661, 131198, 65662, 131199, 65663, 131200, 65664, 131201, 65665, 131202, 65666, 131203, 65667, 131204, 65668, 131205, 65669, 131206, 65670, 131207, 65671, 131208, 65672, 131209, 65673, 131210, 65674, 131211, 65675, 131212, 65676, 131213, 65677, 131214, 65678, 131215, 65679, 131216, 65680, 131217, 65681, 131218, 65682, 131219, 65683, 131220, 65684, 131221, 65686, 65585, 131219, 65584, 131220, 65583, 131221, 65582, 131222, 65581, 131223, 65580, 131224, 65579, 131225, 65578, 131226, 65577, 131227, 65576, 131228, 65575, 131229, 65574, 131230, 65573, 131231, 65572, 131232, 65571, 131233, 65570, 131234, 65569, 131235, 65568, 131236, 65567, 131237, 65566, 131238, 65565, 131239, 65564, 131240, 65563, 131241, 65562, 131242, 65561, 131243, 65560, 131244, 65559, 131245, 65558, 131246, 65557, 131247, 65556, 131248, 65555, 131249, 65554, 131250, 65553, 131251, 65552, 131252, 65551, 131253, 65550, 131254, 65549, 131255, 65548, 131256, 65547, 131257, 65546, 131258, 65545, 131259, 65544, 131260, 65543, 131261, 65542, 131262, 65541, 131263, 65540, 131264, 65539, 131265, 65538, 131266, 65537, 131267, 65536, 131268, 65535)
+
+[node name="Environment" type="Node2D" parent="World"]
+
+[node name="Player" type="CharacterBody2D" parent="World"]
+position = Vector2(400, 300)
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("3_8j9kq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("RectangleShape2D_1x8vu")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+modulate = Color(0.9, 0.9, 1, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Player"]
+
+[node name="CorruptionParticles" type="GPUParticles2D" parent="Player"]
+emitting = false
+amount = 50
+process_material = SubResource("ParticleProcessMaterial_2xt7d")
+lifetime = 2.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_2xt7d"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(20, 30, 1)
+direction = Vector3(0, -1, 0)
+spread = 15.0
+initial_velocity_min = 10.0
+initial_velocity_max = 30.0
+angular_velocity_min = 360.0
+angular_velocity_max = 360.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.1
+scale_max = 0.3
+color = Color(0.5, 0.3, 1, 1)
+
+[node name="AuraLight" type="PointLight2D" parent="Player"]
+enabled = false
+color = Color(0.5, 0.5, 1, 1)
+energy = 0.0
+range_layer_min = 1
+range_layer_max = 2
+shadow_enabled = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="UIController" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("4_7p5rs")
+
+[node name="HealthBar" type="ProgressBar" parent="UI"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -60.0
+offset_right = 220.0
+offset_bottom = -40.0
+max_value = 100.0
+value = 100.0
+
+[node name="HealthLabel" type="Label" parent="UI"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -80.0
+offset_right = 100.0
+offset_bottom = -60.0
+text = "Health"
+horizontal_alignment = 1
+
+[node name="ManaBar" type="ProgressBar" parent="UI"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -35.0
+offset_right = 220.0
+offset_bottom = -15.0
+max_value = 50.0
+value = 50.0
+tint_progress = Color(0.4, 0.6, 1, 1)
+
+[node name="ManaLabel" type="Label" parent="UI"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -55.0
+offset_right = 100.0
+offset_bottom = -35.0
+text = "Mana"
+horizontal_alignment = 1
+
+[node name="CorruptionMeter" type="ProgressBar" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 40.0
+max_value = 100.0
+value = 0.0
+tint_progress = Color(0.6, 0.2, 0.8, 1)
+
+[node name="CorruptionLabel" type="Label" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
+offset_top = 0.0
+offset_right = -20.0
+offset_bottom = 20.0
+text = "Corruption"
+horizontal_alignment = 1
+
+[node name="DialoguePanel" type="Panel" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -150.0
+offset_right = 300.0
+offset_bottom = -30.0
+
+[node name="DialogueText" type="RichTextLabel" parent="UI/DialoguePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+bbcode_enabled = true
+text = "Dialogue text here..."
+fit_content = true
+
+[node name="InventoryPanel" type="Panel" parent="UI"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+
+[node name="InventoryGrid" type="GridContainer" parent="UI/InventoryPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+columns = 5
+
+[connection signal="pressed" from="UI" to="UI" method="_on_inventory_button_pressed"]
